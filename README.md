@@ -4,7 +4,7 @@
 
  * debian 8
  * nginx 1.8
- * php (5.5, 5.6, 7.0, hhvm)
+ * php (5.6-original, 7.0, hhvm)
 
 ## Switchable features
 
