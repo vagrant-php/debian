@@ -20,17 +20,7 @@
 
 ## Installation
 
- * [linux][1]
- * [osx][2]
- * [windows][3]
-
-### Plugin
-
-#### Hostmanager
-
-```{.sh}
-vagrant plugin install vagrant-hostmanager
-```
+ * [installationguide][1]
 
 ### vagrant-php
 
@@ -40,7 +30,7 @@ vagrant plugin install vagrant-hostmanager
 
 ```{.sh}
 cd /path/to/my/project
-git submodule add -b 14.04 https://github.com/vagrant-php/debian.git vagrant-php
+git submodule add -b 8 https://github.com/vagrant-php/debian.git vagrant-php
 ```
 
 #### install
@@ -70,10 +60,11 @@ git submodule update --remote -- vagrant-php
 hostname: projectname.dev
 ```
 
-for advanced configuration see the [default configuration][4]
+for advanced configuration see the [default configuration][2]
 
 #### supported application
 
+ * bolt2
  * contao3
  * drupal7
  * lavarel5
@@ -113,27 +104,14 @@ vagrant provision
 vagrant ssh
 ```
 
-## Troubleshooting
-
- * [all platforms][6]
- * [linux][7]
- * [osx][8]
- * [windows][9]
-
 ## Thanks
 
- * [VMware][10] for the large discount on the [vmware workstation][11] license for testing this setup.
- * [hashicorp][12] for the large discount on the [vagrant-vmware-workstation][13] license for testing this setup.
+ * [VMware][3] for the large discount on the [vmware workstation][4] license for testing this setup.
+ * [hashicorp][5] for the large discount on the [vagrant-vmware-workstation][6] license for testing this setup.
 
-[1]: doc/installation/linux.md
-[2]: doc/installation/osx.md
-[3]: doc/installation/windows.md
-[4]: vagrant-default.yml
-[6]: doc/troubleshooting/allplatforms.md
-[7]: doc/troubleshooting/linux.md
-[8]: doc/troubleshooting/osx.md
-[9]: doc/troubleshooting/windows.md
-[10]: https://www.vmware.com
-[11]: https://www.vmware.com/products/workstation/features.html
-[12]: https://hashicorp.com
-[13]: https://www.vagrantup.com/vmware#buy-now
+[1]: https://github.com/vagrant-php/doc
+[2]: vagrant-default.yml
+[3]: https://www.vmware.com
+[4]: https://www.vmware.com/products/workstation/features.html
+[5]: https://hashicorp.com
+[6]: https://www.vagrantup.com/vmware#buy-now
