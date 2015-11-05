@@ -1,13 +1,18 @@
 ---
+
+### apt
+
 - name: apt | upgrade
   apt: update_cache=yes upgrade=full
 
 - name: apt | install packages
-  apt: name={{ item }} state=latest
+  apt: name={{ item }} state=present
   with_items: general.packages
 
+### locale
+
 - name: locale | install
-  apt: name={{ item }} state=latest
+  apt: name={{ item }} state=present
   with_items:
     - locales-all
 
@@ -17,11 +22,15 @@
 - name: locale | Set locale to {{ general.config.locale }}
   command: /usr/sbin/update-locale LANG={{ general.config.locale }} LC_ALL={{ general.config.locale }}
 
+### timezone
+
 - name: timezone | Set /etc/localtime to {{ general.config.timezone }}
   command: /bin/cp /usr/share/zoneinfo/{{ general.config.timezone }} /etc/localtime
 
 - name: timezone | Update tzdata
   command: dpkg-reconfigure --frontend noninteractive tzdata
+
+### bash
 
 - name: bash | copy .bash_vagrant for user vagrant
   template:
@@ -42,6 +51,8 @@
 
 - name: bash | register .bash_vagrant for user root
   lineinfile: dest=/root/.bashrc line='. ~/.bash_vagrant'
+
+### grub
 
 - name: grub | fix boot hidden timeout
   lineinfile:
@@ -78,3 +89,16 @@
 - name: grub | update
   command: /usr/sbin/update-grub
   when: fixbootparameter.changed
+
+### disable-transparent-hugepages
+
+- name: disable-transparent-hugepages | add init script disable-transparent-hugepages
+  copy:
+    src=disable-transparent-hugepages
+    dest=/etc/init.d/disable-transparent-hugepages
+    owner=root
+    group=root
+    mode=755
+
+- name: disable-transparent-hugepages | register init script disable-transparent-hugepages
+  command: /usr/sbin/chkconfig --add disable-transparent-hugepages
