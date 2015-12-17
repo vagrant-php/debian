@@ -1,0 +1,11 @@
+--- Vagrantfile
++++ Vagrantfile
+@@ -101,8 +101,6 @@
+         print "no valid sharetype, please take a look into README.md!\n"
+     end
+ 
+-
+-
+     # Resources of our box
+     # --------------------------------------------------------------------------
+ 
