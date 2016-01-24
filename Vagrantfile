@@ -25,18 +25,24 @@ end
 setupPath = File.dirname(File.expand_path(__FILE__))
 
 defaultConfigPath = setupPath + '/vagrant-default.yml'
+userDefaultConfigPath = Dir.home + '/.vagrant-default-user.yml'
 projectConfigPath = setupPath + '/../vagrant.yml'
-userConfigPath = setupPath + '/../vagrant-user.yml'
+userProjectConfigPath = setupPath + '/../vagrant-user.yml'
 
 setupConfig = YAML.load_file(defaultConfigPath)
+
+if File.file?(userDefaultConfigPath)
+    userDefaultConfig = YAML.load_file(userDefaultConfigPath)
+    setupConfig = setupConfig.deep_merge(userDefaultConfig)
+end
 
 if File.file?(projectConfigPath)
     projectConfig = YAML.load_file(projectConfigPath)
     setupConfig = setupConfig.deep_merge(projectConfig)
 end
 
-if File.file?(userConfigPath)
-    userConfig = YAML.load_file(userConfigPath)
+if File.file?(userProjectConfigPath)
+    userConfig = YAML.load_file(userProjectConfigPath)
     setupConfig = setupConfig.deep_merge(userConfig)
 end
 
@@ -52,6 +58,18 @@ elsif Vagrant::Util::Platform.windows?
     hostos = 'windows'
 else
     hostos = 'unknown'
+end
+
+# applications
+# --------------------------------------------------------------------------
+setupConfig['applications'] = []
+if not setupConfig['application'].nil?
+    setupConfig['applications'].push(setupConfig['application'])
+end
+setupConfig['subhosts'].each do |subhost|
+    if not subhost['application'].nil?
+        setupConfig['applications'].push(subhost['application'])
+    end
 end
 
 Vagrant.configure(2) do |config|
@@ -93,10 +111,10 @@ Vagrant.configure(2) do |config|
         end
     end
 
-    if not setupConfig['subhostnames'].empty?
+    if not setupConfig['subhosts'].empty?
         aliases = []
-        setupConfig['subhostnames'].each do |subhostname|
-            aliases.push(subhostname + '.' + setupConfig['hostname'])
+        setupConfig['subhosts'].each do |subhost|
+            aliases.push(subhost['subhostname'] + '.' + setupConfig['hostname'])
         end
         config.hostmanager.aliases = aliases.join(' ')
     end
@@ -179,8 +197,8 @@ Vagrant.configure(2) do |config|
         sh.args = ['ansible/playbook.yml', setupConfig.to_json.split(' ').join('\u0020')]
     end
 
-    if setupConfig['application']
-        if setupConfig['subhostnames'].empty?
+    if setupConfig['subhosts'].empty?
+        if setupConfig['application']
             config.vm.provision 'shell', run: "always" do |sh|
                 sh.path = "bindmount/" + setupConfig['application'] + ".sh"
                 sh.args = [
@@ -189,14 +207,16 @@ Vagrant.configure(2) do |config|
                     '/vagrant',
                 ]
             end
-        else
-            setupConfig['subhostnames'].each do |subhostname|
+        end
+    else
+        setupConfig['subhosts'].each do |subhost|
+            if subhost['application']
                 config.vm.provision 'shell', run: "always" do |sh|
-                    sh.path = "bindmount/" + setupConfig['application'] + ".sh"
+                    sh.path = "bindmount/" + subhost['application'] + ".sh"
                     sh.args = [
-                        setupConfig['application'],
-                        '/tmp/' + subhostname + '/' + setupConfig['application'],
-                        '/vagrant/' + subhostname,
+                        subhost['application'],
+                        '/tmp/' + subhost['subhostname'] + '/' + subhost['application'],
+                        '/vagrant/' + subhost['subhostname'],
                     ]
                 end
             end
