@@ -15,7 +15,7 @@
     - php7.0-common
     - php7.0-cli
     - php7.0-fpm
-    - php-apcu
+    - php7.0-apcu
   notify:
     - restart php7.0-fpm
 
