@@ -113,6 +113,7 @@ general:
         - build-essential
         - htop
         - openjdk-7-jre-headless
+        - unzip
         - vim
 
 git:
@@ -299,7 +300,6 @@ php:
         socket: *phpserversocket
 
     modules:
-        - apcu
         - curl
         - gd
         - imagick

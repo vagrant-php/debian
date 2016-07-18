@@ -16,10 +16,12 @@
     - { role: nginx-application-drupal7, when: "'drupal7' in applications" }
     - { role: nginx-application-drupal8, when: "'drupal8' in applications" }
     - { role: nginx-application-lavarel5, when: "'lavarel5' in applications" }
+    - { role: nginx-application-magento1, when: "'magento1' in applications" }
     - { role: nginx-application-symfony1, when: "'symfony1' in applications" }
     - { role: nginx-application-symfony2, when: "'symfony2' in applications" }
     - { role: nginx-application-symfony3, when: "'symfony3' in applications" }
     - { role: nginx-application-wordpress4, when: "'wordpress4' in applications" }
+    - { role: nginx-application-shopware, when: "'shopware' in applications" }
     - nginx
     - { role: nodejs, when: role.nodejs }
     - { role: php56-original, when: phpversion == '5.6-original' }
